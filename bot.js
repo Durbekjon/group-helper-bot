@@ -22,7 +22,6 @@ const notifyAdmins = (message) => {
   });
 };
 
-// Yangi a'zolar qo'shilganda
 bot.on('new_chat_members', async (msg) => {
   bot.deleteMessage(msg.chat.id, msg.message_id);
   if (msg.chat.id !== allowedChatId) return; // Faqat kerakli guruhda ishlashi uchun tekshiruv
@@ -81,8 +80,8 @@ bot.on('new_chat_members', async (msg) => {
 
       // Adminlarga xabar yuborish
       members.forEach(async (member) => {
-        const userProfileLink = `https://t.me/${member.username || member.id}`;
-        const fromProfileLink = `https://t.me/${from.username || from.id}`;
+        const userProfileLink = `tg://user?id=${member.username || member.id}`;
+        const fromProfileLink = `tg://user?id=${from.username || from.id}`;
         const adminMessage = `✨ <a href="${fromProfileLink}">${
           from.first_name
         }</a> <a href="${userProfileLink}">${
@@ -95,7 +94,7 @@ bot.on('new_chat_members', async (msg) => {
         notifyAdmins(adminMessage);
       });
     } else {
-      const userProfileLink = `https://t.me/${from.username || from.id}`;
+      const userProfileLink = `tg://user?id=${from.username || from.id}`;
       const adminMessage = `✨ <a href="${userProfileLink}">${from.first_name}${
         from.last_name ? ` ${from.last_name}` : ''
       }</a> guruhga qayta qo'shildi! \n\n🎯 <a href="${userProfileLink}">${
@@ -114,7 +113,6 @@ bot.on('left_chat_member', async (msg) => {
 
   try {
     const {
-      from,
       chat,
       message_id: messageId,
       left_chat_member: leftMember,
@@ -122,7 +120,7 @@ bot.on('left_chat_member', async (msg) => {
     bot.deleteMessage(chat.id, messageId);
 
     // Adminlarga xabar yuborish
-    const userProfileLink = `https://t.me/${
+    const userProfileLink = `tg://user?id=${
       leftMember.username || leftMember.id
     }`;
     const adminMessage = `⚠️  <a href="${userProfileLink}">${leftMember.first_name}</a> guruhdan chiqib ketdi!`;
@@ -136,8 +134,6 @@ bot.on('left_chat_member', async (msg) => {
 });
 
 bot.on('message', async (msg) => {
-  if (msg.chat.id !== allowedChatId) return; // Faqat kerakli guruhda ishlashi uchun tekshiruv
-
   if (msg.text === '/ratings') {
     try {
       // Ratingni olish
@@ -146,8 +142,8 @@ bot.on('message', async (msg) => {
       // Ratingni formatlash
       const message = `📊 **Rating**:\n${rating
         .map((user, index) => {
-          const userProfileLink = `https://t.me/${user.userId}`;
-          return `#${index + 1} <a href="${userProfileLink}">${
+          const userProfileLink = `tg://user?id=${user.userId}`;
+          return `<b>${index + 1}.</b> <a href="${userProfileLink}">${
             user.firstName
           }</a>: ${user.addedUsers?.length || 0}ta foydalanuvchi`;
         })
